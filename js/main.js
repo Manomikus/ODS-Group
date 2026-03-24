@@ -174,10 +174,22 @@ filterBtns.forEach(btn => {
 });
 
 // ===== TESTIMONIALS SLIDER =====
+const testimonialsSlider = document.querySelector('.testimonials-slider');
 const testCards = document.querySelectorAll('.testimonial-card');
 const testNavBtns = document.querySelectorAll('.test-nav-btn');
 let currentTest = 0;
 let autoSlide;
+
+function syncTestimonialsHeight() {
+  if (!testimonialsSlider || testCards.length === 0) return;
+
+  let maxHeight = 0;
+  testCards.forEach((card) => {
+    maxHeight = Math.max(maxHeight, card.scrollHeight);
+  });
+
+  testimonialsSlider.style.height = `${Math.max(maxHeight, 280)}px`;
+}
 
 function showTestimonial(index) {
   testCards.forEach((card, i) => {
@@ -190,6 +202,7 @@ function showTestimonial(index) {
   testNavBtns.forEach(btn => btn.classList.remove('active'));
   testNavBtns[index].classList.add('active');
   currentTest = index;
+  syncTestimonialsHeight();
 }
 
 testNavBtns.forEach(btn => {
@@ -210,6 +223,15 @@ function resetAutoSlide() {
 }
 
 autoSlide = setInterval(nextTestimonial, 5000);
+
+if (testimonialsSlider && testCards.length > 0) {
+  syncTestimonialsHeight();
+  window.addEventListener('resize', syncTestimonialsHeight);
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(syncTestimonialsHeight).catch(() => {});
+  }
+}
 
 // ===== CONTACT FORM =====
 const contactForm = document.getElementById('contactForm');
