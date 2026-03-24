@@ -1545,10 +1545,6 @@ ul {
 }
 
 @media (max-width: 768px) {
-  html {
-    scroll-behavior: auto;
-  }
-
   .navbar {
     transform: translateY(-120%);
     opacity: 0;

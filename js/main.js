@@ -252,20 +252,12 @@ if (contactForm) {
 }
 
 // ===== SMOOTH SCROLL =====
-const isMobileViewport = () => window.matchMedia('(max-width: 768px)').matches;
-
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
-    // Keep native (non-smooth) scrolling behavior on mobile.
-    if (isMobileViewport()) return;
-
-    const href = this.getAttribute('href');
-    if (!href || href === '#') return;
-
     e.preventDefault();
-    const target = document.querySelector(href);
+    const target = document.querySelector(this.getAttribute('href'));
     if (target) {
-      const offset = navbar ? navbar.offsetHeight + 20 : 20;
+      const offset = navbar.offsetHeight + 20;
       const position = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top: position, behavior: 'smooth' });
     }
