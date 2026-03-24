@@ -1666,6 +1666,10 @@ ul {
   .nav-menu .nav-link-cta {
     margin-top: 4px;
     border: none;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black) !important;
+    font-weight: 700;
+    box-shadow: 0 8px 22px rgba(201,168,76,0.28);
   }
 
   .nav-toggle {
@@ -1888,6 +1892,10 @@ ul {
   .nav-menu .nav-link-cta {
     margin-top: 2px;
     border: none;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black) !important;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(201,168,76,0.24);
   }
 
   .nav-toggle {
