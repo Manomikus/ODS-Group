@@ -1545,6 +1545,21 @@ ul {
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    transform: translateY(-120%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .navbar.scrolled {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+    box-shadow:
+      0 10px 30px rgba(0,0,0,0.55),
+      0 0 26px rgba(201,168,76,0.22);
+  }
+
   .loader-logo img {
     width: 290px;
     margin-bottom: 42px;

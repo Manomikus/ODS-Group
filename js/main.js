@@ -42,14 +42,14 @@ const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 const navLinks = document.querySelectorAll('.nav-link');
 
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 50) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
+function updateNavbarState() {
+  if (!navbar) return;
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
   updateActiveNav();
-});
+}
+
+window.addEventListener('scroll', updateNavbarState);
+updateNavbarState();
 
 navToggle.addEventListener('click', () => {
   navToggle.classList.toggle('active');
