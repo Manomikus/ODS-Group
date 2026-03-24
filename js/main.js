@@ -14,10 +14,29 @@ window.addEventListener('load', () => {
 // ===== THEME TOGGLE =====
 const THEME_STORAGE_KEY = 'ods-theme';
 const themeToggle = document.getElementById('themeToggle');
+const themeLogos = document.querySelectorAll('.theme-logo');
+const siteFavicon = document.getElementById('siteFavicon');
+
+function updateThemeAssets(theme) {
+  const isLight = theme === 'light';
+  themeLogos.forEach((logo) => {
+    const lightSrc = logo.getAttribute('data-light-src');
+    const darkSrc = logo.getAttribute('data-dark-src');
+    if (!lightSrc || !darkSrc) return;
+    logo.src = isLight ? lightSrc : darkSrc;
+  });
+
+  if (!siteFavicon) return;
+  const lightFavicon = siteFavicon.getAttribute('data-light-src');
+  const darkFavicon = siteFavicon.getAttribute('data-dark-src');
+  if (!lightFavicon || !darkFavicon) return;
+  siteFavicon.href = isLight ? lightFavicon : darkFavicon;
+}
 
 function applyTheme(theme) {
   const nextTheme = theme === 'light' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', nextTheme);
+  updateThemeAssets(nextTheme);
 
   if (!themeToggle) return;
   const targetThemeLabel = nextTheme === 'light' ? 'sombre' : 'clair';
