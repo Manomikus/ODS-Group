@@ -556,6 +556,12 @@ ul {
   animation: scroll-bounce 1.5s ease-in-out infinite;
 }
 
+@media (hover: none), (pointer: coarse) {
+  .hero-scroll {
+    display: none;
+  }
+}
+
 @keyframes scroll-bounce {
   0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
   50% { transform: translateX(-50%) translateY(6px); opacity: 0.3; }
