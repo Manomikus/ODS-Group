@@ -289,13 +289,13 @@ ul {
 }
 
 .nav-logo-img {
-  height: 50px;
+  height: 86px;
   width: auto;
   transition: var(--transition);
 }
 
 .navbar.scrolled .nav-logo-img {
-  height: 40px;
+  height: 72px;
 }
 
 .nav-menu {
@@ -1562,6 +1562,14 @@ ul {
   .nav-toggle {
     display: flex;
     z-index: 1001;
+  }
+
+  .nav-logo-img {
+    height: 74px;
+  }
+
+  .navbar.scrolled .nav-logo-img {
+    height: 62px;
   }
 
   .hero-logo {
