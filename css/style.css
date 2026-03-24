@@ -88,13 +88,15 @@ ul {
 }
 
 .loader-logo img {
-  width: 200px;
-  margin: 0 auto 30px;
+  width: 260px;
+  margin: 0 auto 42px;
+  transform: scale(1.2);
+  transform-origin: center;
   animation: pulse-glow 1.5s ease-in-out infinite;
 }
 
 .loader-bar {
-  width: 200px;
+  width: 240px;
   height: 3px;
   background: var(--gray-800);
   border-radius: 3px;
@@ -1529,6 +1531,16 @@ ul {
 }
 
 @media (max-width: 768px) {
+  .loader-logo img {
+    width: 230px;
+    margin-bottom: 34px;
+    transform: scale(1.14);
+  }
+
+  .loader-bar {
+    width: 210px;
+  }
+
   .section {
     padding: 80px 0;
   }
@@ -1642,6 +1654,16 @@ ul {
 }
 
 @media (max-width: 480px) {
+  .loader-logo img {
+    width: 200px;
+    margin-bottom: 28px;
+    transform: scale(1.1);
+  }
+
+  .loader-bar {
+    width: 186px;
+  }
+
   .hero-cta {
     flex-direction: column;
     align-items: center;
