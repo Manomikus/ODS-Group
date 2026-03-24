@@ -1161,6 +1161,8 @@ ul {
 .testimonial-card {
   position: absolute;
   inset: 0;
+  display: flex;
+  flex-direction: column;
   background: var(--black-card);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 20px;
@@ -1192,7 +1194,7 @@ ul {
   font-size: 1.1rem;
   line-height: 1.8;
   color: rgba(255,255,255,0.85);
-  margin-bottom: 30px;
+  margin-bottom: 0;
   font-style: italic;
 }
 
@@ -1200,6 +1202,8 @@ ul {
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-top: auto;
+  padding-top: 26px;
 }
 
 .testimonial-author > div:last-child {
@@ -1224,7 +1228,7 @@ ul {
   display: block;
   font-size: 0.95rem;
   line-height: 1.3;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .testimonial-author > div:last-child span {
@@ -1232,7 +1236,7 @@ ul {
   font-size: 0.8rem;
   line-height: 1.4;
   color: var(--gray-500);
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .testimonial-nav {
@@ -1664,6 +1668,7 @@ ul {
 
   .testimonial-author {
     gap: 14px;
+    padding-top: 20px;
   }
 
   .testimonial-author > div:last-child strong {
@@ -1744,6 +1749,10 @@ ul {
     width: 44px;
     height: 44px;
     font-size: 0.8rem;
+  }
+
+  .testimonial-author {
+    padding-top: 16px;
   }
 }
 
