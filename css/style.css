@@ -88,15 +88,15 @@ ul {
 }
 
 .loader-logo img {
-  width: 260px;
-  margin: 0 auto 42px;
-  transform: scale(1.2);
+  width: 340px;
+  margin: 0 auto 56px;
+  transform: scale(1.32);
   transform-origin: center;
   animation: pulse-glow 1.5s ease-in-out infinite;
 }
 
 .loader-bar {
-  width: 240px;
+  width: 290px;
   height: 3px;
   background: var(--gray-800);
   border-radius: 3px;
@@ -1532,13 +1532,13 @@ ul {
 
 @media (max-width: 768px) {
   .loader-logo img {
-    width: 230px;
-    margin-bottom: 34px;
-    transform: scale(1.14);
+    width: 290px;
+    margin-bottom: 42px;
+    transform: scale(1.22);
   }
 
   .loader-bar {
-    width: 210px;
+    width: 245px;
   }
 
   .section {
@@ -1655,13 +1655,13 @@ ul {
 
 @media (max-width: 480px) {
   .loader-logo img {
-    width: 200px;
-    margin-bottom: 28px;
-    transform: scale(1.1);
+    width: 238px;
+    margin-bottom: 34px;
+    transform: scale(1.16);
   }
 
   .loader-bar {
-    width: 186px;
+    width: 206px;
   }
 
   .hero-cta {
