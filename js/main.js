@@ -1,7 +1,13 @@
 // ===== PRELOADER =====
 window.addEventListener('load', () => {
   setTimeout(() => {
-    document.getElementById('preloader').classList.add('loaded');
+    const preloader = document.getElementById('preloader');
+    if (preloader) preloader.classList.add('loaded');
+
+    // Start counters after preloader fade, so users can see the animation.
+    setTimeout(() => {
+      animateCounters();
+    }, 250);
   }, 1800);
 });
 
@@ -124,7 +130,6 @@ function animateCounters() {
 
   counters.forEach(c => observer.observe(c));
 }
-animateCounters();
 
 // ===== SERVICE TABS =====
 const tabBtns = document.querySelectorAll('.tab-btn');
