@@ -304,6 +304,23 @@ const portfolioDetails = {
       { src: 'https://images.pexels.com/photos/52977/crowd-audience-band-concert-52977.jpeg?auto=compress&cs=tinysrgb&w=1600', alt: 'Ambiance concert et public' },
       { src: 'https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=1600', alt: 'Performance dance sur scène' }
     ]
+  },
+  'primud-backstage': {
+    category: 'PRIMUD 2025',
+    title: 'Backstage & aftermovie de la cérémonie',
+    lead: "Coulisses, montée en pression et moments exclusifs autour de la distinction d'O'new Raymond.",
+    story: [
+      "Ce volet backstage retrace l'envers du décor : préparation, coordination technique et ambiance avant le passage sur scène.",
+      "On y retrouve les échanges clés avec l'équipe, les moments de concentration et les séquences de célébration juste après la remise du prix.",
+      "Cette immersion complète le récit PRIMUD 2025 et met en valeur la dimension humaine derrière la performance artistique."
+    ],
+    images: [
+      { src: 'img/IMG_3331.JPG', alt: 'Backstage PRIMUD 2025 - O\'new Raymond' },
+      { src: 'img/IMG_3332.JPG', alt: 'Cérémonie PRIMUD 2025 - remise de prix' },
+      { src: 'img/IMG_3333.JPG', alt: 'Échanges en coulisses PRIMUD 2025' },
+      { src: 'img/IMG_3334.JPG', alt: 'Tenue traditionnelle - moment PRIMUD 2025' },
+      { src: 'img/IMG_3335.JPG', alt: 'Clôture de soirée PRIMUD 2025' }
+    ]
   }
 };
 
