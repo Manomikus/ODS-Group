@@ -224,6 +224,23 @@ const portfolioModalCloseBtns = document.querySelectorAll('[data-portfolio-close
 
 let portfolioVideoStopTimer = null;
 let lastPortfolioTrigger = null;
+const PRIMUD_VIDEO_ID = '0zY86odLV94';
+const PRIMUD_VIDEO_START = 27 * 60;
+const PRIMUD_VIDEO_END = 29 * 60 + 30;
+
+function buildYouTubeSegmentUrl(videoId, startSeconds, endSeconds) {
+  const params = new URLSearchParams({
+    start: String(startSeconds),
+    end: String(endSeconds),
+    autoplay: '1',
+    controls: '1',
+    enablejsapi: '1',
+    playsinline: '1',
+    rel: '0',
+    modestbranding: '1'
+  });
+  return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
 
 const portfolioDetails = {
   'primud-2025': {
@@ -242,8 +259,8 @@ const portfolioDetails = {
       { src: 'img/IMG_3334.JPG', alt: 'O\'new Raymond en tenue traditionnelle lors de PRIMUD 2025' },
       { src: 'img/IMG_3335.JPG', alt: 'Scène et ambiance cérémonie PRIMUD 2025' }
     ],
-    videoEmbedUrl: 'https://www.youtube.com/embed/0zY86odLV94?start=1620&end=1770&autoplay=1&enablejsapi=1&rel=0&modestbranding=1',
-    videoStopAfterMs: (1770 - 1620) * 1000
+    videoEmbedUrl: buildYouTubeSegmentUrl(PRIMUD_VIDEO_ID, PRIMUD_VIDEO_START, PRIMUD_VIDEO_END),
+    videoStopAfterMs: (PRIMUD_VIDEO_END - PRIMUD_VIDEO_START) * 1000
   },
   'performance-contemporaine': {
     category: 'Chorégraphie',
@@ -320,14 +337,19 @@ const portfolioDetails = {
       { src: 'img/IMG_3333.JPG', alt: 'Échanges en coulisses PRIMUD 2025' },
       { src: 'img/IMG_3334.JPG', alt: 'Tenue traditionnelle - moment PRIMUD 2025' },
       { src: 'img/IMG_3335.JPG', alt: 'Clôture de soirée PRIMUD 2025' }
-    ]
+    ],
+    videoEmbedUrl: buildYouTubeSegmentUrl(PRIMUD_VIDEO_ID, PRIMUD_VIDEO_START, PRIMUD_VIDEO_END),
+    videoStopAfterMs: (PRIMUD_VIDEO_END - PRIMUD_VIDEO_START) * 1000
   }
 };
 
 function clearPortfolioVideo() {
   clearTimeout(portfolioVideoStopTimer);
   portfolioVideoStopTimer = null;
-  if (portfolioModalVideo) portfolioModalVideo.src = '';
+  if (portfolioModalVideo) {
+    portfolioModalVideo.onload = null;
+    portfolioModalVideo.src = '';
+  }
 }
 
 function setPortfolioMainImage(image, index = 0) {
@@ -387,6 +409,15 @@ function openPortfolioModal(portfolioId, triggerEl) {
   clearPortfolioVideo();
   if (details.videoEmbedUrl) {
     portfolioModalVideoWrap.hidden = false;
+
+    portfolioModalVideo.onload = () => {
+      portfolioModalVideo.contentWindow?.postMessage(JSON.stringify({
+        event: 'command',
+        func: 'playVideo',
+        args: []
+      }), '*');
+    };
+
     portfolioModalVideo.src = details.videoEmbedUrl;
 
     if (details.videoStopAfterMs) {
