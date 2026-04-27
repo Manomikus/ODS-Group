@@ -1020,8 +1020,8 @@ html[data-theme="light"] .footer-bottom {
   grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-template-rows:
     clamp(360px, 38vw, 560px)
-    clamp(150px, 13vw, 190px)
-    clamp(170px, 16vw, 230px);
+    clamp(170px, 15vw, 220px)
+    clamp(190px, 18vw, 260px);
   grid-template-areas:
     "hero hero hero hero hero hero"
     "mid1 mid1 mid2 mid2 mid3 mid3"
@@ -2015,8 +2015,8 @@ html[data-theme="light"] .portfolio-modal-text {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-rows:
       clamp(300px, 42vw, 460px)
-      clamp(130px, 17vw, 180px)
-      clamp(150px, 20vw, 210px);
+      clamp(145px, 19vw, 195px)
+      clamp(170px, 22vw, 230px);
     grid-template-areas:
       "hero hero hero hero hero hero"
       "mid1 mid1 mid2 mid2 mid3 mid3"
@@ -2247,7 +2247,7 @@ html[data-theme="light"] .portfolio-modal-text {
   }
 
   .portfolio-grid-editorial .portfolio-item {
-    min-height: 230px;
+    min-height: 250px;
   }
 
   .portfolio-grid-editorial .portfolio-item-hero {
