@@ -1017,12 +1017,15 @@ html[data-theme="light"] .footer-bottom {
 }
 
 .portfolio-grid-editorial {
-  grid-template-columns: minmax(300px, 1.35fr) minmax(150px, 0.56fr) minmax(210px, 0.95fr);
-  grid-template-rows: repeat(3, clamp(150px, 15vw, 220px));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows:
+    clamp(230px, 24vw, 340px)
+    clamp(150px, 13vw, 190px)
+    clamp(170px, 16vw, 230px);
   grid-template-areas:
-    "hero mid1 sideTop"
-    "hero mid2 sideBottom"
-    "hero mid3 sideBottom";
+    "hero hero hero hero hero hero"
+    "mid1 mid1 mid2 mid2 mid3 mid3"
+    "sideTop sideTop sideTop sideBottom sideBottom sideBottom";
   align-items: stretch;
 }
 
@@ -1122,18 +1125,15 @@ html[data-theme="light"] .footer-bottom {
   font-size: 0.8rem;
 }
 
-.portfolio-item-hero .portfolio-overlay,
-.portfolio-item-side-bottom .portfolio-overlay {
+.portfolio-item-hero .portfolio-overlay {
   padding: 28px;
 }
 
-.portfolio-item-hero .portfolio-overlay h4,
-.portfolio-item-side-bottom .portfolio-overlay h4 {
+.portfolio-item-hero .portfolio-overlay h4 {
   font-size: 1.24rem;
 }
 
-.portfolio-item-hero .portfolio-overlay p,
-.portfolio-item-side-bottom .portfolio-overlay p {
+.portfolio-item-hero .portfolio-overlay p {
   font-size: 0.87rem;
 }
 
@@ -2012,13 +2012,15 @@ html[data-theme="light"] .portfolio-modal-text {
   }
 
   .portfolio-grid-editorial {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(4, clamp(150px, 22vw, 220px));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows:
+      clamp(200px, 29vw, 300px)
+      clamp(130px, 17vw, 180px)
+      clamp(150px, 20vw, 210px);
     grid-template-areas:
-      "hero hero"
-      "mid1 sideTop"
-      "mid2 sideBottom"
-      "mid3 sideBottom";
+      "hero hero hero hero hero hero"
+      "mid1 mid1 mid2 mid2 mid3 mid3"
+      "sideTop sideTop sideTop sideBottom sideBottom sideBottom";
   }
 
   .portfolio-grid-editorial .portfolio-overlay {
@@ -2248,8 +2250,7 @@ html[data-theme="light"] .portfolio-modal-text {
     min-height: 230px;
   }
 
-  .portfolio-grid-editorial .portfolio-item-hero,
-  .portfolio-grid-editorial .portfolio-item-side-bottom {
+  .portfolio-grid-editorial .portfolio-item-hero {
     min-height: 320px;
   }
 
