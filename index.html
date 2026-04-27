@@ -384,59 +384,99 @@
         <div class="title-decoration"><span></span><span></span><span></span></div>
       </div>
       <div class="portfolio-grid" data-aos="fade-up">
-        <div class="portfolio-item portfolio-item-large">
+        <div class="portfolio-item portfolio-item-large" data-portfolio-id="primud-2025" role="button" tabindex="0" aria-label="Ouvrir le détail de la cérémonie PRIMUD 2025">
           <div class="portfolio-placeholder">
-            <img src="https://images.pexels.com/photos/30271349/pexels-photo-30271349.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Public nombreux lors d'un grand événement live" class="portfolio-image" loading="lazy">
+            <img src="img/IMG_3332.JPG" alt="O'new Raymond pendant la cérémonie PRIMUD 2025" class="portfolio-image" loading="lazy">
             <div class="portfolio-overlay">
-              <span class="portfolio-cat">Événementiel</span>
-              <h4>Gala d'entreprise</h4>
-              <p>Spectacle sur mesure pour une soirée corporate</p>
+              <span class="portfolio-cat">Cérémonie PRIMUD 2025</span>
+              <h4>Remise du prix du meilleur chorégraphe 2025</h4>
+              <p>Cérémonie officielle de distinction et montée sur scène</p>
+              <span class="portfolio-open-indicator">Voir l'événement</span>
             </div>
           </div>
         </div>
-        <div class="portfolio-item">
+        <div class="portfolio-item" data-portfolio-id="performance-contemporaine" role="button" tabindex="0" aria-label="Ouvrir le détail de la performance contemporaine">
           <div class="portfolio-placeholder">
             <img src="https://images.pexels.com/photos/33911218/pexels-photo-33911218.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Danseur en performance contemporaine sur scène" class="portfolio-image" loading="lazy">
             <div class="portfolio-overlay">
               <span class="portfolio-cat">Chorégraphie</span>
               <h4>Performance contemporaine</h4>
               <p>Spectacle de danse contemporaine</p>
+              <span class="portfolio-open-indicator">Voir l'événement</span>
             </div>
           </div>
         </div>
-        <div class="portfolio-item">
+        <div class="portfolio-item" data-portfolio-id="scene-action" role="button" tabindex="0" aria-label="Ouvrir le détail de la scène d'action">
           <div class="portfolio-placeholder">
             <img src="https://images.pexels.com/photos/32439172/pexels-photo-32439172.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Équipe technique en tournage sur un plateau de film" class="portfolio-image" loading="lazy">
             <div class="portfolio-overlay">
               <span class="portfolio-cat">Cinéma</span>
               <h4>Scène d'action</h4>
               <p>Chorégraphie de combat pour film</p>
+              <span class="portfolio-open-indicator">Voir l'événement</span>
             </div>
           </div>
         </div>
-        <div class="portfolio-item">
+        <div class="portfolio-item" data-portfolio-id="ouverture-bal" role="button" tabindex="0" aria-label="Ouvrir le détail de l'ouverture de bal">
           <div class="portfolio-placeholder">
             <img src="https://images.pexels.com/photos/32142661/pexels-photo-32142661.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Ouverture de bal de mariage avec les mariés sur la piste" class="portfolio-image" loading="lazy">
             <div class="portfolio-overlay">
               <span class="portfolio-cat">Mariage</span>
               <h4>Ouverture de bal</h4>
               <p>Animation surprise pour les mariés</p>
+              <span class="portfolio-open-indicator">Voir l'événement</span>
             </div>
           </div>
         </div>
-        <div class="portfolio-item portfolio-item-large">
+        <div class="portfolio-item portfolio-item-large" data-portfolio-id="show-hiphop" role="button" tabindex="0" aria-label="Ouvrir le détail du show hip-hop">
           <div class="portfolio-placeholder">
             <img src="https://images.pexels.com/photos/34042750/pexels-photo-34042750.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Battle hip-hop énergique lors d'un festival indoor" class="portfolio-image" loading="lazy">
             <div class="portfolio-overlay">
               <span class="portfolio-cat">Spectacle</span>
               <h4>Show hip-hop</h4>
               <p>Création originale pour festival</p>
+              <span class="portfolio-open-indicator">Voir l'événement</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <div class="portfolio-modal" id="portfolioModal" aria-hidden="true">
+    <div class="portfolio-modal-backdrop" data-portfolio-close></div>
+    <div class="portfolio-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="portfolioModalTitle">
+      <button type="button" class="portfolio-modal-close" data-portfolio-close aria-label="Fermer le détail de l'événement">&times;</button>
+      <div class="portfolio-modal-head">
+        <span class="portfolio-modal-cat" id="portfolioModalCat"></span>
+        <h3 id="portfolioModalTitle"></h3>
+        <p id="portfolioModalLead"></p>
+      </div>
+      <div class="portfolio-modal-grid">
+        <div class="portfolio-modal-gallery">
+          <div class="portfolio-modal-main">
+            <img id="portfolioModalMainImage" src="" alt="">
+          </div>
+          <div class="portfolio-modal-thumbs" id="portfolioModalThumbs"></div>
+        </div>
+        <div class="portfolio-modal-story">
+          <div class="portfolio-modal-video-wrap" id="portfolioModalVideoWrap" hidden>
+            <iframe
+              id="portfolioModalVideo"
+              width="100%"
+              height="400"
+              src=""
+              title="YouTube video"
+              frameborder="0"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div class="portfolio-modal-text" id="portfolioModalText"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Team Section -->
   <section id="team" class="section team">

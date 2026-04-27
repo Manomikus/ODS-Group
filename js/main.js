@@ -209,6 +209,220 @@ filterBtns.forEach(btn => {
   });
 });
 
+// ===== PORTFOLIO MODAL =====
+const portfolioCards = document.querySelectorAll('.portfolio-item[data-portfolio-id]');
+const portfolioModal = document.getElementById('portfolioModal');
+const portfolioModalCat = document.getElementById('portfolioModalCat');
+const portfolioModalTitle = document.getElementById('portfolioModalTitle');
+const portfolioModalLead = document.getElementById('portfolioModalLead');
+const portfolioModalMainImage = document.getElementById('portfolioModalMainImage');
+const portfolioModalThumbs = document.getElementById('portfolioModalThumbs');
+const portfolioModalText = document.getElementById('portfolioModalText');
+const portfolioModalVideoWrap = document.getElementById('portfolioModalVideoWrap');
+const portfolioModalVideo = document.getElementById('portfolioModalVideo');
+const portfolioModalCloseBtns = document.querySelectorAll('[data-portfolio-close]');
+
+let portfolioVideoStopTimer = null;
+let lastPortfolioTrigger = null;
+
+const portfolioDetails = {
+  'primud-2025': {
+    category: 'Cérémonie PRIMUD 2025',
+    title: 'Cérémonie de remise du prix du meilleur chorégraphe 2025',
+    lead: "Un moment fort de reconnaissance artistique qui a mis en lumière l'excellence chorégraphique d'O'new Raymond.",
+    story: [
+      "La cérémonie PRIMUD 2025 a réuni les plus grands acteurs de la scène urbaine et du spectacle vivant ivoirien dans une soirée de prestige.",
+      "Lors de la remise du prix du meilleur chorégraphe 2025, O'new Raymond a été distingué pour la qualité de ses créations, son impact sur la scène et sa capacité à valoriser l'identité culturelle à travers la danse.",
+      "Cet événement marque une étape majeure pour ODS Group et confirme le positionnement du collectif parmi les références de la chorégraphie événementielle en Côte d'Ivoire."
+    ],
+    images: [
+      { src: 'img/IMG_3332.JPG', alt: 'O\'new Raymond pendant la cérémonie PRIMUD 2025' },
+      { src: 'img/IMG_3331.JPG', alt: 'Portrait O\'new Raymond PRIMUD 2025' },
+      { src: 'img/IMG_3333.JPG', alt: 'Moment officiel PRIMUD 2025' },
+      { src: 'img/IMG_3334.JPG', alt: 'O\'new Raymond en tenue traditionnelle lors de PRIMUD 2025' },
+      { src: 'img/IMG_3335.JPG', alt: 'Scène et ambiance cérémonie PRIMUD 2025' }
+    ],
+    videoEmbedUrl: 'https://www.youtube.com/embed/0zY86odLV94?start=1620&end=1770&autoplay=1&enablejsapi=1&rel=0&modestbranding=1',
+    videoStopAfterMs: (1770 - 1620) * 1000
+  },
+  'performance-contemporaine': {
+    category: 'Chorégraphie',
+    title: 'Performance contemporaine',
+    lead: 'Une création scénique pensée pour offrir un impact émotionnel fort et un storytelling visuel élégant.',
+    story: [
+      "Cette performance contemporaine a été conçue autour d'une direction artistique sobre, précise et immersive.",
+      "Le travail chorégraphique a mis l'accent sur la musicalité, la fluidité des transitions et l'interprétation des danseurs.",
+      "Le résultat : un tableau scénique premium, calibré pour un public exigeant et des événements d'exception."
+    ],
+    images: [
+      { src: 'https://images.pexels.com/photos/33911218/pexels-photo-33911218.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: 'Performance contemporaine sur scène' },
+      { src: 'https://images.pexels.com/photos/34752634/pexels-photo-34752634.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: 'Danse en scène pour événement premium' },
+      { src: 'https://images.pexels.com/photos/34042750/pexels-photo-34042750.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: 'Show chorégraphique devant un public' }
+    ]
+  },
+  'scene-action': {
+    category: 'Cinéma',
+    title: "Scène d'action",
+    lead: "Une direction technique orientée sécurité, rythme et lisibilité visuelle pour l'écran.",
+    story: [
+      "La chorégraphie de combat a été préparée avec un découpage précis des mouvements et des intentions de jeu.",
+      "Chaque enchaînement a été ajusté pour conserver l'intensité dramatique tout en garantissant la sécurité des interprètes.",
+      "Le dispositif a permis une captation propre, dynamique et adaptée aux standards de production audiovisuelle."
+    ],
+    images: [
+      { src: 'https://images.pexels.com/photos/32439172/pexels-photo-32439172.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: "Équipe de tournage sur une scène d'action" },
+      { src: 'https://images.pexels.com/photos/30433578/pexels-photo-30433578.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: 'Public et effets de lumière en tournage' },
+      { src: 'https://images.pexels.com/photos/33115381/pexels-photo-33115381.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: 'Mise en place scénique et coordination technique' }
+    ]
+  },
+  'ouverture-bal': {
+    category: 'Mariage',
+    title: 'Ouverture de bal',
+    lead: 'Un moment chorégraphié sur mesure pour créer une entrée mémorable et émotionnelle.',
+    story: [
+      "L'ouverture de bal a été construite selon la personnalité des mariés et le rythme de la soirée.",
+      "Le travail a combiné élégance, fluidité et effets de scène pour surprendre les invités dès les premières notes.",
+      "Cette prestation a transformé la piste en véritable scène de spectacle, avec une narration chorégraphique cohérente."
+    ],
+    images: [
+      { src: 'https://images.pexels.com/photos/32142661/pexels-photo-32142661.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: 'Ouverture de bal chorégraphiée' },
+      { src: 'https://images.pexels.com/photos/10048500/pexels-photo-10048500.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: 'Animation danse pendant un événement privé' },
+      { src: 'https://images.pexels.com/photos/30271349/pexels-photo-30271349.jpeg?auto=compress&cs=tinysrgb&w=1400', alt: 'Public pendant la prestation de mariage' }
+    ]
+  },
+  'show-hiphop': {
+    category: 'Spectacle',
+    title: 'Show hip-hop',
+    lead: "Une création originale à haute énergie, conçue pour festival et grands formats live.",
+    story: [
+      "Ce show hip-hop repose sur une écriture collective puissante, entre précision technique et présence scénique.",
+      "La mise en scène exploite les contrastes de tempo, les formations de groupe et une forte interaction avec le public.",
+      "La performance a été pensée pour s'adapter aux grands plateaux et maximiser l'impact visuel en configuration festival."
+    ],
+    images: [
+      { src: 'https://images.pexels.com/photos/34042750/pexels-photo-34042750.jpeg?auto=compress&cs=tinysrgb&w=1600', alt: 'Show hip-hop en festival' },
+      { src: 'https://images.pexels.com/photos/52977/crowd-audience-band-concert-52977.jpeg?auto=compress&cs=tinysrgb&w=1600', alt: 'Ambiance concert et public' },
+      { src: 'https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=1600', alt: 'Performance dance sur scène' }
+    ]
+  }
+};
+
+function clearPortfolioVideo() {
+  clearTimeout(portfolioVideoStopTimer);
+  portfolioVideoStopTimer = null;
+  if (portfolioModalVideo) portfolioModalVideo.src = '';
+}
+
+function setPortfolioMainImage(image, index = 0) {
+  if (!portfolioModalMainImage) return;
+  portfolioModalMainImage.src = image.src;
+  portfolioModalMainImage.alt = image.alt || 'Photo de l\'événement';
+
+  if (!portfolioModalThumbs) return;
+  const thumbButtons = portfolioModalThumbs.querySelectorAll('.portfolio-thumb-btn');
+  thumbButtons.forEach((btn, i) => btn.classList.toggle('active', i === index));
+}
+
+function renderPortfolioThumbs(images) {
+  if (!portfolioModalThumbs) return;
+  portfolioModalThumbs.innerHTML = '';
+
+  images.forEach((image, index) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'portfolio-thumb-btn';
+    btn.setAttribute('aria-label', `Voir la photo ${index + 1}`);
+
+    const thumbImage = document.createElement('img');
+    thumbImage.src = image.src;
+    thumbImage.alt = image.alt || `Photo ${index + 1}`;
+    btn.appendChild(thumbImage);
+
+    btn.addEventListener('click', () => setPortfolioMainImage(image, index));
+    portfolioModalThumbs.appendChild(btn);
+  });
+}
+
+function openPortfolioModal(portfolioId, triggerEl) {
+  if (!portfolioModal) return;
+  const details = portfolioDetails[portfolioId];
+  if (!details) return;
+
+  lastPortfolioTrigger = triggerEl || null;
+  portfolioModalCat.textContent = details.category || '';
+  portfolioModalTitle.textContent = details.title || '';
+  portfolioModalLead.textContent = details.lead || '';
+
+  const images = Array.isArray(details.images) && details.images.length > 0
+    ? details.images
+    : [{ src: '', alt: '' }];
+
+  renderPortfolioThumbs(images);
+  setPortfolioMainImage(images[0], 0);
+
+  portfolioModalText.innerHTML = '';
+  (details.story || []).forEach((paragraph) => {
+    const p = document.createElement('p');
+    p.textContent = paragraph;
+    portfolioModalText.appendChild(p);
+  });
+
+  clearPortfolioVideo();
+  if (details.videoEmbedUrl) {
+    portfolioModalVideoWrap.hidden = false;
+    portfolioModalVideo.src = details.videoEmbedUrl;
+
+    if (details.videoStopAfterMs) {
+      portfolioVideoStopTimer = setTimeout(() => {
+        portfolioModalVideo.contentWindow?.postMessage(JSON.stringify({
+          event: 'command',
+          func: 'pauseVideo',
+          args: []
+        }), '*');
+      }, details.videoStopAfterMs);
+    }
+  } else {
+    portfolioModalVideoWrap.hidden = true;
+  }
+
+  portfolioModal.classList.add('open');
+  portfolioModal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+}
+
+function closePortfolioModal() {
+  if (!portfolioModal || !portfolioModal.classList.contains('open')) return;
+  portfolioModal.classList.remove('open');
+  portfolioModal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  clearPortfolioVideo();
+
+  if (lastPortfolioTrigger) {
+    lastPortfolioTrigger.focus();
+  }
+}
+
+portfolioCards.forEach((card) => {
+  const portfolioId = card.getAttribute('data-portfolio-id');
+  if (!portfolioId) return;
+
+  card.addEventListener('click', () => openPortfolioModal(portfolioId, card));
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openPortfolioModal(portfolioId, card);
+    }
+  });
+});
+
+portfolioModalCloseBtns.forEach((btn) => {
+  btn.addEventListener('click', closePortfolioModal);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePortfolioModal();
+});
+
 // ===== TESTIMONIALS SLIDER =====
 const testimonialsSlider = document.querySelector('.testimonials-slider');
 const testCards = document.querySelectorAll('.testimonial-card');
