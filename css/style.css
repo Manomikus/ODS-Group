@@ -58,7 +58,7 @@ html[data-theme="light"] {
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth removed — instant native scroll for snappier UX */
   font-size: 16px;
 }
 

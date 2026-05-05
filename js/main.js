@@ -586,20 +586,8 @@ if (contactForm) {
 }
 
 // ===== SMOOTH SCROLL =====
-// Handled by Lenis in /js/cinema.js for buttery smooth scroll.
-// Fallback only if Lenis is not available.
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    if (typeof window.Lenis !== 'undefined') return; // cinema.js handles it
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      const offset = navbar.offsetHeight + 20;
-      const position = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: position, behavior: 'smooth' });
-    }
-  });
-});
+// Anchor navigation is now handled by /js/cinema.js with INSTANT jumps.
+// This block is intentionally a no-op to avoid duplicate handlers.
 
 // ===== PARALLAX EFFECT ON HERO =====
 // Disabled: handled by GSAP ScrollTrigger in /js/cinema.js.

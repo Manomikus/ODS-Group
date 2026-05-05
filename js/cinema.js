@@ -254,30 +254,14 @@
   /* ============================================================
    * 5. SMOOTH SCROLL (Lenis)
    * ==========================================================*/
+  /* ============================================================
+   * 5. SMOOTH SCROLL — disabled (native browser scroll is snappier
+   *    and the anchor jumps need to feel instant on click).
+   * ==========================================================*/
   let lenis = null;
   function initSmoothScroll() {
-    if (reduceMotion || typeof window.Lenis === 'undefined') return;
-    lenis = new Lenis({
-      // Very low lerp = near-instant catch-up to wheel input (snappy mouse feel).
-      lerp: 0.09,
-      // Each wheel notch travels more (closer to native Windows feel).
-      wheelMultiplier: 1.25,
-      smoothWheel: true,
-      // Native touch scrolling on mobile (no fight with iOS/Android momentum).
-      smoothTouch: false,
-      touchMultiplier: 1.6,
-      prevent: (node) => !!(node && node.classList && node.classList.contains('no-lenis')),
-    });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
-
-    if (hasST) {
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add((t) => lenis.raf(t * 1000));
-      gsap.ticker.lagSmoothing(0);
-    }
-
-    // Patch in-page anchor scrolling to use Lenis (snappier than browser smooth)
+    // No Lenis. Use native browser scrolling everywhere.
+    // Anchor clicks: scroll to target with a small offset for the navbar.
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener('click', (e) => {
         const href = anchor.getAttribute('href');
@@ -285,24 +269,14 @@
         const target = document.querySelector(href);
         if (!target) return;
         e.preventDefault();
-        e.stopImmediatePropagation();
         const navbar = document.getElementById('navbar');
         const offset = (navbar?.offsetHeight || 0) + 16;
-        lenis.scrollTo(target, { offset: -offset, duration: 1.0 });
-      }, true);
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        // Use 'auto' (instant) by default. Switch to 'smooth' if you want a
+        // brief easing — feel free to tweak per-anchor.
+        window.scrollTo({ top, behavior: 'auto' });
+      });
     });
-
-    // Pause Lenis while modals or mobile menu are open (so they scroll natively)
-    const mo = new MutationObserver(() => {
-      if (document.body.classList.contains('modal-open') || document.querySelector('.nav-menu.open')) {
-        lenis.stop();
-      } else {
-        lenis.start();
-      }
-    });
-    mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    const navMenu = document.getElementById('navMenu');
-    if (navMenu) mo.observe(navMenu, { attributes: true, attributeFilter: ['class'] });
   }
 
   /* ============================================================
@@ -492,20 +466,9 @@
       });
     }
 
-    // Hero parallax on scroll — lightweight (transform only, no opacity scrub
-    // which is GPU-heavy and feels laggy with smooth scrolling).
-    if (hasST) {
-      gsap.to('.hero-content', {
-        yPercent: 12,
-        ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
-      });
-      gsap.to('.hero-bg', {
-        yPercent: -8,
-        ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
-      });
-    }
+    // Hero parallax on scroll — REMOVED
+    // (was creating GPU work on every scroll frame; native scroll feels
+    // way snappier without it).
   }
 
   /* ============================================================
@@ -514,7 +477,7 @@
   function initSectionReveals() {
     if (!hasST || reduceMotion) return;
 
-    // Big background numbers
+    // Big background numbers — STATIC fade-in (no scrub = no per-frame cost)
     const sections = ['#about', '#services', '#portfolio', '#team', '#media', '#contact'];
     sections.forEach((sel, idx) => {
       const sec = document.querySelector(sel);
@@ -526,9 +489,9 @@
       sec.appendChild(num);
 
       gsap.fromTo(num,
-        { yPercent: 30, opacity: 0 },
-        { yPercent: -10, opacity: 0.07, ease: 'none',
-          scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true }
+        { opacity: 0 },
+        { opacity: 0.07, duration: 0.9, ease: 'power2.out',
+          scrollTrigger: { trigger: sec, start: 'top 80%' }
         }
       );
     });
@@ -578,16 +541,10 @@
     // Generic [data-aos] elements are handled by main.js initAOS +
     // style.css transitions — we don't override them here to keep them reliable.
 
-    // Portfolio image kenburns on enter view
-    document.querySelectorAll('.portfolio-image, .about-image, .team-photo, .media-thumb').forEach((img) => {
-      gsap.fromTo(img, { scale: 1.08, filter: 'brightness(0.85)' }, {
-        scale: 1, filter: 'brightness(1)', duration: 1.4, ease: 'power3.out',
-        scrollTrigger: { trigger: img, start: 'top 92%' }
-      });
-    });
+    // Image kenburns REMOVED — was creating one ScrollTrigger per image
+    // (~12 of them) with continuous filter/transform updates.
 
-    // About badge floating
-    gsap.to('.about-badge', { y: -8, duration: 2.2, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    // About badge floating animation REMOVED — was running 24/7.
 
     // Refresh ScrollTrigger after preloader curtain
     setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -629,12 +586,8 @@
    * 9. NAV LOGO LIVE — subtle floating + halo on hover
    * ==========================================================*/
   function initNavLogo() {
-    const navLogo = document.querySelector('.nav-logo');
-    if (!navLogo || !hasGSAP) return;
-    const img = navLogo.querySelector('.nav-logo-img');
-    if (img && reduceMotion === false) {
-      gsap.to(img, { y: -2, duration: 2.4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-    }
+    // Nav-logo subtle floating REMOVED — kept hover halo only (CSS).
+    return;
   }
 
   /* ============================================================
