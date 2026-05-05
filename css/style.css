@@ -827,7 +827,7 @@ html[data-theme="light"] .footer-bottom {
 
 .about-badge {
   position: absolute;
-  bottom: 30px;
+  bottom: 70px;
   left: -30px;
   background: linear-gradient(135deg, var(--gold), var(--gold-dark));
   color: var(--ink-on-accent);
@@ -2219,7 +2219,7 @@ html[data-theme="light"] .portfolio-modal-text {
   .about-badge {
     left: auto;
     right: 20px;
-    bottom: 20px;
+    bottom: 64px;
   }
 
   .service-showcase {
