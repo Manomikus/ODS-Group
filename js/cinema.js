@@ -283,6 +283,36 @@
    * 6. HERO ENHANCEMENTS — animated logo halo, kinetic title,
    *    spotlight follow, marquee, parallax tilt
    * ==========================================================*/
+  function HeroLogoIntro(hero) {
+    if (!hero || reduceMotion) return null;
+
+    const existing = hero.querySelector('.hero-logo-video-intro');
+    if (existing) return {
+      root: existing,
+      video: existing.querySelector('.hero-logo-video-intro__media')
+    };
+
+    const intro = document.createElement('div');
+    intro.className = 'hero-logo-video-intro';
+    intro.setAttribute('aria-hidden', 'true');
+    intro.innerHTML = `
+      <video class="hero-logo-video-intro__media" autoplay muted playsinline preload="auto">
+        <source src="/public/videos/ods-logo-intro-alpha.mov" type='video/quicktime; codecs="hvc1"'>
+        <source src="/public/videos/ods-logo-intro-alpha.webm" type="video/webm">
+        <source src="/public/videos/ods-logo-intro.mp4" type="video/mp4">
+      </video>
+    `;
+
+    const heroContent = hero.querySelector('.hero-content');
+    if (heroContent) hero.insertBefore(intro, heroContent);
+    else hero.appendChild(intro);
+
+    return {
+      root: intro,
+      video: intro.querySelector('.hero-logo-video-intro__media')
+    };
+  }
+
   function prepareHero() {
     const hero = document.querySelector('.hero');
     if (!hero) return;
@@ -315,6 +345,7 @@
       `;
       logoWrap.insertBefore(halo, logoWrap.firstChild);
     }
+    const logoVideoIntro = HeroLogoIntro(hero);
 
     // --- Overtitle
     const heroContent = hero.querySelector('.hero-content');
@@ -383,6 +414,10 @@
       gsap.set(hero.querySelector('.hero-logo'), { scale: 0.7, opacity: 0, rotate: -15 });
       gsap.set(hero.querySelector('.hero-halo-rays'), { scale: 0.6, opacity: 0, rotate: -30 });
       gsap.set(hero.querySelectorAll('.hero-halo-orbit'), { scale: 0.7, opacity: 0 });
+      if (logoVideoIntro?.root) {
+        gsap.set(logoVideoIntro.root, { autoAlpha: 0, scale: 0.98 });
+        gsap.set(logoVideoIntro.video, { opacity: 0, scale: 1.02 });
+      }
     }
   }
 
@@ -400,19 +435,58 @@
     const heroLogo = hero.querySelector('.hero-logo');
     const heroHaloRays = hero.querySelector('.hero-halo-rays');
     const heroHaloOrbits = hero.querySelectorAll('.hero-halo-orbit');
+    const logoVideoIntro = hero.querySelector('.hero-logo-video-intro');
+    const logoVideo = logoVideoIntro?.querySelector('.hero-logo-video-intro__media');
 
-    const heroIn = gsap.timeline({ delay: 0.05, defaults: { ease: 'expo.out' } });
+    const heroIn = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
     heroIn
-      .to(overtitle, { opacity: 1, y: 0, duration: 0.7 }, 0)
       .to(heroHaloRays, { scale: 1, opacity: 0.85, rotate: 0, duration: 1.4 }, 0)
       .to(heroHaloOrbits, { scale: 1, opacity: 0.6, duration: 1.2, stagger: 0.15 }, 0.1)
       .to(heroLogo, { scale: 1, opacity: 1, rotate: 0, duration: 1.1, ease: 'back.out(1.5)' }, 0.15)
-      .to(allLetters, { yPercent: 0, rotateX: 0, opacity: 1, duration: 0.95, stagger: 0.035 }, 0.35)
-      .to(tagline, { opacity: 1, y: 0, duration: 0.7 }, 0.85)
-      .to(cta, { opacity: 1, y: 0, duration: 0.7 }, 1.0)
-      .to(stats, { opacity: 1, y: 0, duration: 0.7 }, 1.15)
-      .to(marquee, { opacity: 1, y: 0, duration: 0.6 }, 1.25)
-      .to(scrollEl, { opacity: 1, y: 0, duration: 0.5 }, 1.35);
+      .to(overtitle, { opacity: 1, y: 0, duration: 0.7 }, 0.35)
+      .to(allLetters, { yPercent: 0, rotateX: 0, opacity: 1, duration: 0.95, stagger: 0.035 }, 0.5)
+      .to(tagline, { opacity: 1, y: 0, duration: 0.7 }, 1.0)
+      .to(cta, { opacity: 1, y: 0, duration: 0.7 }, 1.15)
+      .to(stats, { opacity: 1, y: 0, duration: 0.7 }, 1.3)
+      .to(marquee, { opacity: 1, y: 0, duration: 0.6 }, 1.4)
+      .to(scrollEl, { opacity: 1, y: 0, duration: 0.5 }, 1.5);
+
+    const revealHero = (() => {
+      let didReveal = false;
+      return () => {
+        if (didReveal) return;
+        didReveal = true;
+        if (logoVideoIntro) {
+          gsap.to(logoVideoIntro, {
+            autoAlpha: 0,
+            scale: 0.99,
+            duration: 0.55,
+            ease: 'power2.inOut',
+            onComplete: () => {
+              if (logoVideo) {
+                logoVideo.pause();
+                logoVideo.currentTime = 0;
+              }
+            }
+          });
+        }
+        heroIn.play(0);
+      };
+    })();
+
+    if (logoVideoIntro && logoVideo) {
+      gsap.to(logoVideoIntro, { autoAlpha: 1, scale: 1, duration: 0.35, ease: 'power2.out' });
+      gsap.to(logoVideo, { opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out' });
+      gsap.to(logoVideo, { scale: 1.035, duration: 3.2, ease: 'sine.inOut' });
+
+      logoVideo.addEventListener('ended', revealHero, { once: true });
+      logoVideo.addEventListener('error', revealHero, { once: true });
+      logoVideo.currentTime = 0;
+      logoVideo.play().catch(revealHero);
+      window.setTimeout(revealHero, 4600);
+    } else {
+      revealHero();
+    }
 
     // Continuous halo rotation — paused when hero is off-screen to save CPU.
     const haloRays = gsap.to('.hero-halo-rays', { rotate: 360, duration: 80, ease: 'none', repeat: -1 });

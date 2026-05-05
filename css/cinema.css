@@ -376,7 +376,10 @@ html[data-theme="light"] .preloader-bar { background: rgba(26,34,22,0.12); }
   position: relative;
   isolation: isolate;
 }
-.hero-content { will-change: transform, opacity; }
+.hero-content {
+  z-index: 3;
+  will-change: transform, opacity;
+}
 .hero-content::before {
   /* faint background framing — STATIC */
   content: "";
@@ -444,6 +447,43 @@ html[data-theme="light"] .hero-spot { mix-blend-mode: multiply; opacity: 0.35; }
   z-index: 2;
   filter: drop-shadow(0 0 30px rgba(201,168,76,0.35));
   will-change: transform, filter;
+}
+
+/* Canva video intro. MP4 has no alpha channel, so the black canvas is blended
+ * out with screen mode and softened at the edges to avoid the visible rectangle. */
+.hero-logo-video-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  contain: layout paint;
+}
+.hero-logo-video-intro::before {
+  display: none;
+}
+.hero-logo-video-intro__media {
+  position: relative;
+  width: min(78vw, 780px);
+  max-height: min(54vh, 500px);
+  object-fit: contain;
+  opacity: 0;
+  mix-blend-mode: screen;
+  filter: contrast(1.2) saturate(1.08) brightness(1.04)
+          drop-shadow(0 0 28px rgba(201,168,76,0.25));
+  -webkit-mask-image:
+    radial-gradient(ellipse 68% 54% at 50% 52%, #000 0%, #000 56%, rgba(0,0,0,0.54) 66%, transparent 80%);
+  mask-image:
+    radial-gradient(ellipse 68% 54% at 50% 52%, #000 0%, #000 56%, rgba(0,0,0,0.54) 66%, transparent 80%);
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+html[data-theme="light"] .hero-logo-video-intro__media {
+  opacity: 0.9;
 }
 
 /* Overtitle */
@@ -792,6 +832,14 @@ html[data-theme="light"] .form-status.is-error { color: #b8344a; }
   .hero-overtitle { font-size: 0.62rem; letter-spacing: 0.3em; }
   .hero-overtitle-line { flex: 0 0 30px; }
   .hero-logo-halo { inset: -35%; }
+  .hero-logo-video-intro__media {
+    width: min(94vw, 500px);
+    max-height: 40vh;
+    -webkit-mask-image:
+      radial-gradient(ellipse 72% 58% at 50% 52%, #000 0%, #000 58%, rgba(0,0,0,0.5) 68%, transparent 82%);
+    mask-image:
+      radial-gradient(ellipse 72% 58% at 50% 52%, #000 0%, #000 58%, rgba(0,0,0,0.5) 68%, transparent 82%);
+  }
   .ods-cursor { display: none; }
   html.has-custom-cursor,
   html.has-custom-cursor * { cursor: auto !important; }
@@ -808,4 +856,5 @@ html[data-theme="light"] .form-status.is-error { color: #b8344a; }
   }
   .ods-grain { display: none; }
   .preloader-marquee { display: none; }
+  .hero-logo-video-intro { display: none !important; }
 }
