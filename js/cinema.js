@@ -283,48 +283,6 @@
    * 6. HERO ENHANCEMENTS — animated logo halo, kinetic title,
    *    spotlight follow, marquee, parallax tilt
    * ==========================================================*/
-  function buildHeroLogoIntro(hero) {
-    if (!hero) return null;
-
-    const existing = hero.querySelector('.hero-logo-intro');
-    if (existing) return existing;
-
-    const heroLogo = hero.querySelector('.hero-logo');
-    if (!heroLogo) return null;
-
-    const intro = document.createElement('div');
-    intro.className = 'hero-logo-intro';
-    intro.setAttribute('aria-hidden', 'true');
-
-    const particles = Array.from({ length: 18 }).map((_, i) => {
-      const angle = (i / 18) * Math.PI * 2;
-      const radius = i % 3 === 0 ? 180 : (i % 2 === 0 ? 132 : 96);
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * (radius * 0.42);
-      const size = i % 4 === 0 ? 7 : (i % 3 === 0 ? 5 : 3);
-      return `<span class="hero-logo-intro__particle" data-x="${x.toFixed(1)}" data-y="${y.toFixed(1)}" style="--p-size:${size}px"></span>`;
-    }).join('');
-
-    intro.innerHTML = `
-      <div class="hero-logo-intro__stage">
-        <div class="hero-logo-intro__beam hero-logo-intro__beam-left"></div>
-        <div class="hero-logo-intro__beam hero-logo-intro__beam-right"></div>
-        <div class="hero-logo-intro__depth"></div>
-        <div class="hero-logo-intro__halo"></div>
-        <div class="hero-logo-intro__ring hero-logo-intro__ring-a"></div>
-        <div class="hero-logo-intro__ring hero-logo-intro__ring-b"></div>
-        <div class="hero-logo-intro__particles">${particles}</div>
-        <img src="${heroLogo.getAttribute('src')}" alt="" class="hero-logo-intro__logo">
-      </div>
-    `;
-
-    const heroContent = hero.querySelector('.hero-content');
-    if (heroContent) hero.insertBefore(intro, heroContent);
-    else hero.appendChild(intro);
-
-    return intro;
-  }
-
   function prepareHero() {
     const hero = document.querySelector('.hero');
     if (!hero) return;
@@ -357,7 +315,6 @@
       `;
       logoWrap.insertBefore(halo, logoWrap.firstChild);
     }
-    buildHeroLogoIntro(hero);
 
     // --- Overtitle
     const heroContent = hero.querySelector('.hero-content');
@@ -413,7 +370,6 @@
     // Initial hidden state — set early so no FOUC when curtain opens
     if (hasGSAP && !reduceMotion) {
       const allLetters = hero.querySelectorAll('.hero-kinetic-letter');
-      const intro = hero.querySelector('.hero-logo-intro');
       gsap.set(allLetters, { yPercent: 110, rotateX: -60, opacity: 0 });
       const overtitle = hero.querySelector('.hero-overtitle');
       if (overtitle) gsap.set(overtitle, { opacity: 0, y: -20 });
@@ -424,38 +380,9 @@
         hero.querySelector('.hero-marquee'),
         hero.querySelector('.hero-scroll')
       ].filter(Boolean), { opacity: 0, y: 30 });
-      gsap.set(hero.querySelector('.hero-logo'), { scale: 0.92, opacity: 0, rotate: 0 });
+      gsap.set(hero.querySelector('.hero-logo'), { scale: 0.7, opacity: 0, rotate: -15 });
       gsap.set(hero.querySelector('.hero-halo-rays'), { scale: 0.6, opacity: 0, rotate: -30 });
       gsap.set(hero.querySelectorAll('.hero-halo-orbit'), { scale: 0.7, opacity: 0 });
-      if (intro) {
-        gsap.set(intro, { autoAlpha: 1, scale: 1 });
-        gsap.set(intro.querySelector('.hero-logo-intro__stage'), {
-          scale: 0.8,
-          y: 18,
-          rotateX: 8,
-          rotateZ: -1.8,
-          transformPerspective: 1200
-        });
-        gsap.set(intro.querySelector('.hero-logo-intro__logo'), {
-          opacity: 0,
-          scale: 0.86,
-          y: 24,
-          clipPath: 'inset(0% 48% 0% 48%)',
-          filter: 'drop-shadow(0 0 22px rgba(201,168,76,0.28)) brightness(0.96)'
-        });
-        gsap.set(intro.querySelectorAll('.hero-logo-intro__beam, .hero-logo-intro__halo, .hero-logo-intro__depth, .hero-logo-intro__ring'), {
-          opacity: 0,
-          scale: 0.72
-        });
-        gsap.set(intro.querySelectorAll('.hero-logo-intro__particle'), {
-          opacity: 0,
-          x: 0,
-          y: 0,
-          scale: 0.25
-        });
-      }
-    } else {
-      hero.classList.add('hero-logo-intro-complete');
     }
   }
 
@@ -473,74 +400,19 @@
     const heroLogo = hero.querySelector('.hero-logo');
     const heroHaloRays = hero.querySelector('.hero-halo-rays');
     const heroHaloOrbits = hero.querySelectorAll('.hero-halo-orbit');
-    const heroIntro = hero.querySelector('.hero-logo-intro');
-    const introStage = heroIntro?.querySelector('.hero-logo-intro__stage');
-    const introLogo = heroIntro?.querySelector('.hero-logo-intro__logo');
-    const introBeams = heroIntro?.querySelectorAll('.hero-logo-intro__beam');
-    const introHalo = heroIntro?.querySelector('.hero-logo-intro__halo');
-    const introDepth = heroIntro?.querySelector('.hero-logo-intro__depth');
-    const introRings = heroIntro?.querySelectorAll('.hero-logo-intro__ring');
-    const introParticles = heroIntro?.querySelectorAll('.hero-logo-intro__particle');
 
     const heroIn = gsap.timeline({ delay: 0.05, defaults: { ease: 'expo.out' } });
-    heroIn.add(() => {
-      hero.classList.add('hero-logo-intro-active');
-      hero.classList.remove('hero-logo-intro-complete');
-    }, 0);
-
-    if (heroIntro && introStage && introLogo) {
-      heroIn
-        .to(introDepth, { opacity: 1, scale: 1, duration: 0.7, ease: 'power2.out' }, 0)
-        .to(introHalo, { opacity: 1, scale: 1, duration: 0.9, ease: 'power3.out' }, 0.05)
-        .to(introBeams, { opacity: 0.78, scale: 1, rotate: 0, duration: 1.05, stagger: 0.08, ease: 'power3.out' }, 0.08)
-        .to(introRings, { opacity: 0.58, scale: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 0.12)
-        .to(introStage, { scale: 1, y: 0, rotateX: 0, rotateZ: 0, duration: 1.15, ease: 'power4.out' }, 0.05)
-        .to(introLogo, {
-          opacity: 1,
-          scale: 1.06,
-          y: 0,
-          clipPath: 'inset(0% 0% 0% 0%)',
-          filter: 'drop-shadow(0 0 42px rgba(201,168,76,0.48)) drop-shadow(0 0 26px rgba(46,139,60,0.34)) brightness(1.06)',
-          duration: 0.95,
-          ease: 'power4.out'
-        }, 0.12)
-        .to(introParticles, {
-          opacity: (i) => (i % 3 === 0 ? 0.95 : 0.72),
-          x: (_, el) => Number(el.dataset.x) || 0,
-          y: (_, el) => Number(el.dataset.y) || 0,
-          scale: (i) => (i % 4 === 0 ? 1 : 0.75),
-          duration: 0.95,
-          stagger: { amount: 0.38, from: 'center' },
-          ease: 'power3.out'
-        }, 0.28)
-        .to(introStage, { rotateZ: 0.7, y: -3, duration: 0.65, ease: 'sine.inOut' }, 0.95)
-        .to(introLogo, { scale: 1.12, duration: 0.65, ease: 'sine.inOut' }, 0.95)
-        .to(introParticles, { opacity: 0, scale: 0.3, duration: 0.55, stagger: { amount: 0.18, from: 'edges' }, ease: 'power2.in' }, 1.18)
-        .to(introLogo, {
-          scale: 1,
-          filter: 'drop-shadow(0 0 32px rgba(201,168,76,0.36)) drop-shadow(0 0 18px rgba(46,139,60,0.24)) brightness(1)',
-          duration: 0.48,
-          ease: 'power3.out'
-        }, 1.42)
-        .to(heroIntro, { autoAlpha: 0, scale: 0.98, duration: 0.55, ease: 'power2.inOut' }, 1.52);
-    }
-
     heroIn
-      .to(heroHaloRays, { scale: 1, opacity: 0.85, rotate: 0, duration: 1.35 }, 1.2)
-      .to(heroHaloOrbits, { scale: 1, opacity: 0.6, duration: 1.1, stagger: 0.15 }, 1.28)
-      .to(heroLogo, { scale: 1, opacity: 1, rotate: 0, duration: 0.7, ease: 'power3.out' }, 1.45)
-      .to(overtitle, { opacity: 1, y: 0, duration: 0.65 }, 1.62)
-      .to(allLetters, { yPercent: 0, rotateX: 0, opacity: 1, duration: 0.95, stagger: 0.035 }, 1.78)
-      .to(tagline, { opacity: 1, y: 0, duration: 0.7 }, 2.18)
-      .to(cta, { opacity: 1, y: 0, duration: 0.7 }, 2.32)
-      .to(stats, { opacity: 1, y: 0, duration: 0.7 }, 2.46)
-      .to(marquee, { opacity: 1, y: 0, duration: 0.6 }, 2.58)
-      .to(scrollEl, { opacity: 1, y: 0, duration: 0.5 }, 2.68)
-      .add(() => {
-        hero.classList.remove('hero-logo-intro-active');
-        hero.classList.add('hero-logo-intro-complete');
-        if (heroIntro) gsap.set(heroIntro, { display: 'none' });
-      }, 2.1);
+      .to(overtitle, { opacity: 1, y: 0, duration: 0.7 }, 0)
+      .to(heroHaloRays, { scale: 1, opacity: 0.85, rotate: 0, duration: 1.4 }, 0)
+      .to(heroHaloOrbits, { scale: 1, opacity: 0.6, duration: 1.2, stagger: 0.15 }, 0.1)
+      .to(heroLogo, { scale: 1, opacity: 1, rotate: 0, duration: 1.1, ease: 'back.out(1.5)' }, 0.15)
+      .to(allLetters, { yPercent: 0, rotateX: 0, opacity: 1, duration: 0.95, stagger: 0.035 }, 0.35)
+      .to(tagline, { opacity: 1, y: 0, duration: 0.7 }, 0.85)
+      .to(cta, { opacity: 1, y: 0, duration: 0.7 }, 1.0)
+      .to(stats, { opacity: 1, y: 0, duration: 0.7 }, 1.15)
+      .to(marquee, { opacity: 1, y: 0, duration: 0.6 }, 1.25)
+      .to(scrollEl, { opacity: 1, y: 0, duration: 0.5 }, 1.35);
 
     // Continuous halo rotation — paused when hero is off-screen to save CPU.
     const haloRays = gsap.to('.hero-halo-rays', { rotate: 360, duration: 80, ease: 'none', repeat: -1 });

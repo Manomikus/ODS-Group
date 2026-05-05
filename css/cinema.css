@@ -376,10 +376,7 @@ html[data-theme="light"] .preloader-bar { background: rgba(26,34,22,0.12); }
   position: relative;
   isolation: isolate;
 }
-.hero-content {
-  z-index: 3;
-  will-change: transform, opacity;
-}
+.hero-content { will-change: transform, opacity; }
 .hero-content::before {
   /* faint background framing — STATIC */
   content: "";
@@ -447,129 +444,6 @@ html[data-theme="light"] .hero-spot { mix-blend-mode: multiply; opacity: 0.35; }
   z-index: 2;
   filter: drop-shadow(0 0 30px rgba(201,168,76,0.35));
   will-change: transform, filter;
-}
-
-/* HeroLogoIntro — one-shot premium stage reveal. It is an overlay so the
- * existing hero layout stays stable, then it crossfades into the real logo. */
-.hero-logo-intro {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  pointer-events: none;
-  contain: layout paint;
-}
-.hero-logo-intro-complete .hero-logo-intro { display: none; }
-.hero-logo-intro-active .hero-logo,
-.hero-logo-intro-active .hero-logo-intro__logo {
-  animation: none;
-}
-.hero-logo-intro__stage {
-  position: relative;
-  width: min(74vw, 760px);
-  aspect-ratio: 2.35 / 1;
-  display: grid;
-  place-items: center;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-.hero-logo-intro__logo {
-  position: relative;
-  z-index: 5;
-  width: 100%;
-  height: auto;
-  max-height: min(44vh, 370px);
-  object-fit: contain;
-  transform-origin: center;
-  backface-visibility: hidden;
-  will-change: transform, opacity, clip-path, filter;
-}
-.hero-logo-intro__depth {
-  position: absolute;
-  inset: 6% 8%;
-  z-index: 0;
-  border-radius: 999px;
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.24) 0%, rgba(46,139,60,0.18) 35%, transparent 68%),
-    radial-gradient(ellipse at 30% 55%, rgba(224,200,114,0.18) 0%, transparent 44%);
-  filter: blur(34px);
-  transform: translateZ(-90px) scale(1.05);
-  mix-blend-mode: screen;
-}
-.hero-logo-intro__halo {
-  position: absolute;
-  inset: -22%;
-  z-index: 1;
-  border-radius: 50%;
-  background:
-    conic-gradient(from 210deg, transparent 0deg, rgba(201,168,76,0.48) 48deg, transparent 92deg, rgba(46,139,60,0.32) 150deg, transparent 220deg, rgba(224,200,114,0.34) 292deg, transparent 360deg),
-    radial-gradient(circle, rgba(201,168,76,0.16), transparent 58%);
-  filter: blur(10px);
-  mix-blend-mode: screen;
-}
-.hero-logo-intro__beam {
-  position: absolute;
-  z-index: 1;
-  top: -34%;
-  width: 38%;
-  height: 170%;
-  transform-origin: 50% 0%;
-  background: linear-gradient(180deg, rgba(224,200,114,0), rgba(224,200,114,0.23) 28%, rgba(46,139,60,0.12) 62%, transparent 100%);
-  filter: blur(16px);
-  mix-blend-mode: screen;
-}
-.hero-logo-intro__beam-left {
-  left: 5%;
-  transform: rotate(-18deg);
-}
-.hero-logo-intro__beam-right {
-  right: 5%;
-  transform: rotate(18deg);
-}
-.hero-logo-intro__ring {
-  position: absolute;
-  z-index: 2;
-  border-radius: 999px;
-  border: 1px solid rgba(201,168,76,0.36);
-  box-shadow: 0 0 28px rgba(201,168,76,0.14), inset 0 0 24px rgba(46,139,60,0.12);
-  transform: rotate(-4deg);
-}
-.hero-logo-intro__ring-a {
-  width: 92%;
-  height: 56%;
-}
-.hero-logo-intro__ring-b {
-  width: 78%;
-  height: 44%;
-  border-color: rgba(46,139,60,0.34);
-  transform: rotate(5deg);
-}
-.hero-logo-intro__particles {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-}
-.hero-logo-intro__particle {
-  position: absolute;
-  left: 50%;
-  top: 52%;
-  width: var(--p-size, 4px);
-  height: var(--p-size, 4px);
-  border-radius: 999px;
-  background: radial-gradient(circle, #fff7c5 0 16%, var(--gold-light) 17% 46%, rgba(76,175,80,0.7) 47% 70%, transparent 72%);
-  box-shadow: 0 0 16px rgba(224,200,114,0.72), 0 0 24px rgba(46,139,60,0.34);
-  will-change: transform, opacity;
-}
-html[data-theme="light"] .hero-logo-intro__depth {
-  mix-blend-mode: multiply;
-  opacity: 0.75;
-}
-html[data-theme="light"] .hero-logo-intro__halo,
-html[data-theme="light"] .hero-logo-intro__beam {
-  mix-blend-mode: multiply;
 }
 
 /* Overtitle */
@@ -918,20 +792,6 @@ html[data-theme="light"] .form-status.is-error { color: #b8344a; }
   .hero-overtitle { font-size: 0.62rem; letter-spacing: 0.3em; }
   .hero-overtitle-line { flex: 0 0 30px; }
   .hero-logo-halo { inset: -35%; }
-  .hero-logo-intro__stage {
-    width: min(90vw, 430px);
-    aspect-ratio: 2.05 / 1;
-  }
-  .hero-logo-intro__logo { max-height: 30vh; }
-  .hero-logo-intro__beam {
-    top: -18%;
-    height: 138%;
-    filter: blur(12px);
-  }
-  .hero-logo-intro__ring-a {
-    width: 98%;
-    height: 62%;
-  }
   .ods-cursor { display: none; }
   html.has-custom-cursor,
   html.has-custom-cursor * { cursor: auto !important; }
@@ -948,10 +808,4 @@ html[data-theme="light"] .form-status.is-error { color: #b8344a; }
   }
   .ods-grain { display: none; }
   .preloader-marquee { display: none; }
-  .hero-logo-intro { display: none !important; }
-  .hero-logo {
-    opacity: 1 !important;
-    transform: none !important;
-    clip-path: none !important;
-  }
 }
