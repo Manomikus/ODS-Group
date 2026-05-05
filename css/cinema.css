@@ -835,7 +835,9 @@ html[data-theme="light"] .form-status.is-error { color: #b8344a; }
   .hero-logo-video-intro__media {
     width: min(94vw, 500px);
     max-height: 40vh;
-    margin-top: clamp(-260px, -24svh, -140px);
+    margin-top: -360px;
+    margin-top: clamp(-520px, -44vh, -320px);
+    margin-top: clamp(-520px, -44svh, -320px);
     -webkit-mask-image:
       radial-gradient(ellipse 72% 58% at 50% 52%, #000 0%, #000 58%, rgba(0,0,0,0.5) 68%, transparent 82%);
     mask-image:
