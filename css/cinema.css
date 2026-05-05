@@ -22,13 +22,10 @@ html[data-theme="light"] {
   --cinema-deep: #F5F3EA;
 }
 
-/* Hide native cursor when we use custom one */
+/* Custom cursor disabled — keep native cursor for reliability */
 html.has-custom-cursor,
-html.has-custom-cursor * { cursor: none !important; }
-@media (hover: none), (pointer: coarse) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * { cursor: auto !important; }
-}
+html.has-custom-cursor * { cursor: auto !important; }
+.ods-cursor { display: none !important; }
 
 /* =========================================================
  * GRAIN + VIGNETTE OVERLAYS (page-wide, behind cursor)

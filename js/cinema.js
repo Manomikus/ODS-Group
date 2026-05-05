@@ -686,7 +686,7 @@
     detectMotionLibs();
     initGrain();
     initScrollProgress();
-    initCursor();
+    // initCursor();  // disabled — caused "mouse doesn't follow" on some setups.
     initSmoothScroll();
     initMagnetic();
     initNavLogo();
