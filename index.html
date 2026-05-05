@@ -732,7 +732,17 @@
           </div>
         </div>
         <div class="contact-form-wrapper" data-aos="fade-left">
-          <form class="contact-form" id="contactForm">
+          <form
+            class="contact-form"
+            id="contactForm"
+            action="https://formsubmit.co/ajax/odsgroupe@gmail.com"
+            method="POST"
+            novalidate
+          >
+            <input type="hidden" name="_subject" value="Nouvelle demande de devis · ODS Group">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
             <div class="form-row">
               <div class="form-group">
                 <label for="name">Nom complet</label>
@@ -764,6 +774,7 @@
               <label for="message">Votre message</label>
               <textarea id="message" name="message" rows="5" required placeholder="Décrivez votre projet..."></textarea>
             </div>
+            <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
             <button type="submit" class="btn btn-primary btn-full">
               <span>Envoyer la demande</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>

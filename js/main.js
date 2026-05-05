@@ -527,21 +527,61 @@ if (testimonialsSlider && testCards.length > 0) {
   }
 }
 
-// ===== CONTACT FORM =====
+// ===== CONTACT FORM (FormSubmit AJAX) =====
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = contactForm.querySelector('button[type="submit"]');
+    const status = document.getElementById('formStatus');
     const originalHTML = btn.innerHTML;
-    btn.innerHTML = '<span>Message envoy\u00e9 !</span>';
-    btn.style.background = 'linear-gradient(135deg, var(--green), var(--green-dark))';
 
-    setTimeout(() => {
+    // Honeypot check
+    if (contactForm.querySelector('[name="_honey"]')?.value) {
+      return; // bot
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span>Envoi en cours…</span>';
+    if (status) {
+      status.textContent = '';
+      status.className = 'form-status';
+    }
+
+    try {
+      const fd = new FormData(contactForm);
+      const res = await fetch(contactForm.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: fd
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && (data.success === 'true' || data.success === true)) {
+        btn.innerHTML = '<span>✓ Demande envoyée</span>';
+        btn.style.background = 'linear-gradient(135deg, var(--green), var(--green-dark))';
+        if (status) {
+          status.textContent = 'Merci ! Nous revenons vers vous très vite.';
+          status.classList.add('is-success');
+        }
+        contactForm.reset();
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.style.background = '';
+          btn.disabled = false;
+          if (status) status.textContent = '';
+        }, 5000);
+      } else {
+        throw new Error(data.message || 'Erreur d\u2019envoi');
+      }
+    } catch (err) {
       btn.innerHTML = originalHTML;
-      btn.style.background = '';
-      contactForm.reset();
-    }, 3000);
+      btn.disabled = false;
+      if (status) {
+        status.textContent = 'Oups, l\u2019envoi a échoué. Réessaie ou écris à odsgroupe@gmail.com.';
+        status.classList.add('is-error');
+      }
+    }
   });
 }
 

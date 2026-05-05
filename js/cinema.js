@@ -597,6 +597,73 @@
   }
 
   /* ============================================================
+   * 10. TEAM — STAGE SPOTLIGHT PROJECTOR
+   * Cursor-tracked beam + hot spot, with "premier rôle" dim.
+   * ==========================================================*/
+  function initTeamSpotlight() {
+    const grid = document.querySelector('.team-grid');
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.team-card');
+    if (!cards.length) return;
+
+    cards.forEach((card) => {
+      // Initial spotlight position (center-top)
+      card.style.setProperty('--spot-x', '50%');
+      card.style.setProperty('--spot-y', '28%');
+      card.style.setProperty('--spot-strength', '0');
+
+      const onMove = (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = ((e.clientX - rect.left) / rect.width) * 100;
+        const py = ((e.clientY - rect.top) / rect.height) * 100;
+        // Clamp so beam doesn't escape the cone
+        const x = Math.max(15, Math.min(85, px));
+        const y = Math.max(10, Math.min(70, py));
+        card.style.setProperty('--spot-x', x + '%');
+        card.style.setProperty('--spot-y', y + '%');
+      };
+
+      const onEnter = () => {
+        grid.classList.add('has-spot');
+        card.classList.add('is-spot');
+        card.style.setProperty('--spot-strength', '1');
+      };
+
+      const onLeave = () => {
+        card.classList.remove('is-spot');
+        // If no other card is spot, remove grid state
+        if (!grid.querySelector('.team-card.is-spot')) {
+          grid.classList.remove('has-spot');
+        }
+        // Fade beam out
+        card.style.setProperty('--spot-strength', '0');
+      };
+
+      // Touch: tap toggles spotlight on the tapped card
+      const onTouch = (e) => {
+        if (card.classList.contains('is-spot')) {
+          onLeave();
+        } else {
+          // Clear other cards
+          cards.forEach((c) => c !== card && c.classList.remove('is-spot') && c.style.setProperty('--spot-strength', '0'));
+          onEnter();
+          // Default move to center
+          card.style.setProperty('--spot-x', '50%');
+          card.style.setProperty('--spot-y', '32%');
+        }
+      };
+
+      if (!isTouch) {
+        card.addEventListener('mouseenter', onEnter);
+        card.addEventListener('mousemove', onMove);
+        card.addEventListener('mouseleave', onLeave);
+      } else {
+        card.addEventListener('touchstart', onTouch, { passive: true });
+      }
+    });
+  }
+
+  /* ============================================================
    * BOOTSTRAP
    * ==========================================================*/
   function bootstrapEarly() {
@@ -608,6 +675,7 @@
     initMagnetic();
     initNavLogo();
     prepareHero();
+    initTeamSpotlight();
   }
 
   function bootstrapAfterReveal() {

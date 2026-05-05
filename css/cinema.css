@@ -655,25 +655,139 @@ html[data-theme="light"] .section-bignum { opacity: 0.07; }
 .portfolio-item:hover::after,
 .media-item:hover::after { opacity: 1; }
 
-/* Team avatar gold ring rotate on hover */
-.team-card .team-avatar { position: relative; }
+/* =========================================================
+ * TEAM — STAGE SPOTLIGHT EFFECT
+ * Replaces the rotating ring with a dramatic theater spotlight
+ * cone that follows the cursor; siblings dim ("premier rôle").
+ * =======================================================*/
+.team-grid { position: relative; }
+
+/* Cancel any prior rotating ring on the avatar */
 .team-card .team-avatar::before {
+  content: none !important;
+}
+
+.team-card {
+  position: relative;
+  isolation: isolate;
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.5s ease,
+    filter 0.5s ease;
+  overflow: hidden;
+  --spot-x: 50%;
+  --spot-y: 28%;
+  --spot-strength: 0;
+}
+
+/* Photo slot — make sure inside is positioned for the projected light */
+.team-card .team-avatar {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s ease;
+}
+.team-card .team-photo { transition: filter 0.5s ease; }
+
+/* The CONE — projector beam coming from above the card */
+.team-card::before {
   content: "";
   position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent, var(--gold) 25%, transparent 50%, var(--green) 75%, transparent);
-  filter: blur(6px);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 0;
-  animation: navLogoSpin 5s linear infinite;
+  left: 50%;
+  top: -10%;
+  width: 140%;
+  height: 110%;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    /* warm beam */
+    radial-gradient(
+      ellipse 60% 80% at var(--spot-x) -20%,
+      rgba(255, 240, 190, calc(0.55 * var(--spot-strength))) 0%,
+      rgba(255, 220, 140, calc(0.32 * var(--spot-strength))) 18%,
+      rgba(201, 168, 76, calc(0.18 * var(--spot-strength))) 38%,
+      transparent 62%
+    );
+  /* Triangular cone shape via clip-path narrowing as it goes down */
+  clip-path: polygon(
+    calc(var(--spot-x) - 8%) 0%,
+    calc(var(--spot-x) + 8%) 0%,
+    100% 100%,
+    0% 100%
+  );
+  filter: blur(14px);
+  transform: translate(-50%, 0);
+  mix-blend-mode: screen;
+  opacity: 1;
+  transition: background 0.25s ease;
 }
-.team-card:hover .team-avatar::before { opacity: 0.8; }
+html[data-theme="light"] .team-card::before { mix-blend-mode: overlay; }
+
+/* The HOT SPOT on the photo — bright pool of light */
+.team-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: radial-gradient(
+    320px circle at var(--spot-x) var(--spot-y),
+    rgba(255, 245, 210, calc(0.35 * var(--spot-strength))) 0%,
+    rgba(255, 220, 140, calc(0.18 * var(--spot-strength))) 22%,
+    transparent 55%
+  );
+  mix-blend-mode: screen;
+  border-radius: inherit;
+  transition: background 0.2s ease;
+}
+html[data-theme="light"] .team-card::after { mix-blend-mode: overlay; }
+
+/* Brighten the photo when spotlight is on */
+.team-card.is-spot .team-photo {
+  filter: brightness(1.18) contrast(1.05) saturate(1.1)
+          drop-shadow(0 14px 30px rgba(201,168,76,0.35));
+}
+.team-card.is-spot .team-avatar {
+  transform: translateY(-4px) scale(1.04);
+}
+
+/* Premier rôle — siblings dim while this card is spotlighted */
+.team-grid.has-spot .team-card:not(.is-spot) {
+  filter: brightness(0.45) saturate(0.7) blur(0.4px);
+  opacity: 0.78;
+  transform: scale(0.985);
+}
+
+/* Subtle stage floor reflection beneath each card on hover */
+.team-card.is-spot {
+  box-shadow:
+    0 30px 60px -20px rgba(201, 168, 76, 0.35),
+    0 0 0 1px rgba(201, 168, 76, 0.12);
+}
+
+@media (hover: none) {
+  .team-card::before, .team-card::after { display: none; }
+  .team-grid.has-spot .team-card:not(.is-spot) { filter: none; opacity: 1; transform: none; }
+}
 
 /* Portfolio overlay polish */
 .portfolio-item .portfolio-image { transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
 .portfolio-item:hover .portfolio-image { transform: scale(1.08); }
+
+/* =========================================================
+ * CONTACT FORM — status messages
+ * =======================================================*/
+.form-status {
+  min-height: 1.4em;
+  font-size: 0.92rem;
+  margin: 6px 0 12px;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+.form-status:not(:empty) { opacity: 1; }
+.form-status.is-success { color: var(--green-light); }
+.form-status.is-error { color: #ff8c8c; }
+html[data-theme="light"] .form-status.is-error { color: #b8344a; }
 
 /* =========================================================
  * RESPONSIVE TWEAKS
