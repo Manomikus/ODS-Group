@@ -440,30 +440,55 @@
       .to(marquee, { opacity: 1, y: 0, duration: 0.6 }, 1.25)
       .to(scrollEl, { opacity: 1, y: 0, duration: 0.5 }, 1.35);
 
-    // Continuous halo rotation
-    gsap.to('.hero-halo-rays', { rotate: 360, duration: 80, ease: 'none', repeat: -1 });
-    gsap.to('.hero-halo-orbit', { rotate: -360, duration: 60, ease: 'none', repeat: -1 });
-    gsap.to('.hero-halo-orbit-2', { rotate: 360, duration: 90, ease: 'none', repeat: -1 });
+    // Continuous halo rotation — paused when hero is off-screen to save CPU.
+    const haloRays = gsap.to('.hero-halo-rays', { rotate: 360, duration: 80, ease: 'none', repeat: -1 });
+    const haloOrbit1 = gsap.to('.hero-halo-orbit', { rotate: -360, duration: 60, ease: 'none', repeat: -1 });
+    const haloOrbit2 = gsap.to('.hero-halo-orbit-2', { rotate: 360, duration: 90, ease: 'none', repeat: -1 });
+    const heroAnims = [haloRays, haloOrbit1, haloOrbit2];
 
-    // Logo breathing glow
-    gsap.to(heroLogo, {
+    // Logo breathing glow — also off-screen aware
+    const breathing = gsap.to(heroLogo, {
       filter: 'drop-shadow(0 0 60px rgba(201,168,76,0.55)) drop-shadow(0 0 25px rgba(46,139,60,0.3))',
       duration: 2.4, ease: 'sine.inOut', yoyo: true, repeat: -1
     });
+    heroAnims.push(breathing);
 
-    // Parallax cursor tilt for logo + halo
+    if (hasST) {
+      ScrollTrigger.create({
+        trigger: hero,
+        start: 'top bottom',
+        end: 'bottom top',
+        onEnter:    () => heroAnims.forEach((t) => t.play()),
+        onEnterBack:() => heroAnims.forEach((t) => t.play()),
+        onLeave:    () => heroAnims.forEach((t) => t.pause()),
+        onLeaveBack:() => heroAnims.forEach((t) => t.pause())
+      });
+    }
+
+    // Parallax cursor tilt for logo + halo (rAF-throttled so rapid mouse
+    // motion doesn't spawn 100s of tweens per second).
     if (!isTouch) {
       const tiltTarget = hero.querySelector('.hero-logo-wrapper');
-      hero.addEventListener('mousemove', (e) => {
+      let rafQueued = false;
+      let lastX = 0, lastY = 0;
+      const onMove = (e) => {
         const rect = hero.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        gsap.to(tiltTarget, { rotateY: x * 14, rotateX: -y * 12, x: x * 14, y: y * 10, duration: 0.7, ease: 'power2.out', transformPerspective: 1000 });
-        gsap.to('.hero-spot-1', { x: x * 60, y: y * 40, duration: 1.2 });
-        gsap.to('.hero-spot-2', { x: -x * 80, y: -y * 50, duration: 1.4 });
-      });
+        lastX = (e.clientX - rect.left) / rect.width - 0.5;
+        lastY = (e.clientY - rect.top) / rect.height - 0.5;
+        if (rafQueued) return;
+        rafQueued = true;
+        requestAnimationFrame(() => {
+          rafQueued = false;
+          gsap.to(tiltTarget, {
+            rotateY: lastX * 12, rotateX: -lastY * 10,
+            x: lastX * 12, y: lastY * 8,
+            duration: 0.6, ease: 'power2.out', transformPerspective: 1000, overwrite: 'auto'
+          });
+        });
+      };
+      hero.addEventListener('mousemove', onMove, { passive: true });
       hero.addEventListener('mouseleave', () => {
-        gsap.to(tiltTarget, { rotateY: 0, rotateX: 0, x: 0, y: 0, duration: 1, ease: 'power3.out' });
+        gsap.to(tiltTarget, { rotateY: 0, rotateX: 0, x: 0, y: 0, duration: 0.9, ease: 'power3.out', overwrite: 'auto' });
       });
     }
 
