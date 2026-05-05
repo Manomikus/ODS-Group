@@ -152,7 +152,7 @@ html[data-theme="light"] .preloader-cinema { color: #1a2216; }
   left: 0; right: 0;
   overflow: hidden;
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.65;
   z-index: 5;
 }
 .preloader-marquee-top { top: 28px; }
@@ -164,12 +164,23 @@ html[data-theme="light"] .preloader-cinema { color: #1a2216; }
   letter-spacing: 0.22em;
   font-size: 0.78rem;
   color: var(--gold);
-  animation: marqueeMove 22s linear infinite;
+  /* UX: slow, readable, with a half-second still beat at the start so the
+   * eye can register the words, then a smooth seamless loop. */
+  will-change: transform;
+  animation: marqueePreloader 42s linear 0.6s infinite;
+}
+
+@keyframes marqueePreloader {
+  /* Start the words shifted right (~18% of track width) so the first word
+   * is already visibly centered when the preloader appears. The 50% delta
+   * (-32 - 18 = -50) keeps the loop seamless against two duplicated tracks. */
+  from { transform: translate3d(18%, 0, 0); }
+  to   { transform: translate3d(-32%, 0, 0); }
 }
 
 @keyframes marqueeMove {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
 .preloader-stage {
