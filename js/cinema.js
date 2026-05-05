@@ -258,11 +258,15 @@
   function initSmoothScroll() {
     if (reduceMotion || typeof window.Lenis === 'undefined') return;
     lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      // Very low lerp = near-instant catch-up to wheel input (snappy mouse feel).
+      lerp: 0.09,
+      // Each wheel notch travels more (closer to native Windows feel).
+      wheelMultiplier: 1.25,
       smoothWheel: true,
+      // Native touch scrolling on mobile (no fight with iOS/Android momentum).
       smoothTouch: false,
-      touchMultiplier: 1.4
+      touchMultiplier: 1.6,
+      prevent: (node) => !!(node && node.classList && node.classList.contains('no-lenis')),
     });
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
@@ -273,7 +277,7 @@
       gsap.ticker.lagSmoothing(0);
     }
 
-    // Patch in-page anchor scrolling to use Lenis
+    // Patch in-page anchor scrolling to use Lenis (snappier than browser smooth)
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener('click', (e) => {
         const href = anchor.getAttribute('href');
@@ -284,9 +288,21 @@
         e.stopImmediatePropagation();
         const navbar = document.getElementById('navbar');
         const offset = (navbar?.offsetHeight || 0) + 16;
-        lenis.scrollTo(target, { offset: -offset, duration: 1.4 });
+        lenis.scrollTo(target, { offset: -offset, duration: 1.0 });
       }, true);
     });
+
+    // Pause Lenis while modals or mobile menu are open (so they scroll natively)
+    const mo = new MutationObserver(() => {
+      if (document.body.classList.contains('modal-open') || document.querySelector('.nav-menu.open')) {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    });
+    mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    const navMenu = document.getElementById('navMenu');
+    if (navMenu) mo.observe(navMenu, { attributes: true, attributeFilter: ['class'] });
   }
 
   /* ============================================================
@@ -451,18 +467,18 @@
       });
     }
 
-    // Hero parallax on scroll
+    // Hero parallax on scroll — lightweight (transform only, no opacity scrub
+    // which is GPU-heavy and feels laggy with smooth scrolling).
     if (hasST) {
       gsap.to('.hero-content', {
-        yPercent: 18,
-        opacity: 0.2,
+        yPercent: 12,
         ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
       });
       gsap.to('.hero-bg', {
-        yPercent: -12,
+        yPercent: -8,
         ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
       });
     }
   }
