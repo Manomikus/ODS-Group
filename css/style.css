@@ -99,6 +99,12 @@ ul {
   transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
+#preloader:empty {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 #preloader.loaded {
   opacity: 0;
   visibility: hidden;
