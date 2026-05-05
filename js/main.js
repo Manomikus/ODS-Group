@@ -1,14 +1,10 @@
 // ===== PRELOADER =====
+// NOTE: Preloader DOM and reveal timeline are handled by /js/cinema.js
+// We only keep counter trigger here, executed after cinema curtain reveal.
 window.addEventListener('load', () => {
   setTimeout(() => {
-    const preloader = document.getElementById('preloader');
-    if (preloader) preloader.classList.add('loaded');
-
-    // Start counters after preloader fade, so users can see the animation.
-    setTimeout(() => {
-      animateCounters();
-    }, 250);
-  }, 1800);
+    animateCounters();
+  }, 3200);
 });
 
 // ===== THEME TOGGLE =====
@@ -550,8 +546,11 @@ if (contactForm) {
 }
 
 // ===== SMOOTH SCROLL =====
+// Handled by Lenis in /js/cinema.js for buttery smooth scroll.
+// Fallback only if Lenis is not available.
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
+    if (typeof window.Lenis !== 'undefined') return; // cinema.js handles it
     e.preventDefault();
     const target = document.querySelector(this.getAttribute('href'));
     if (target) {
@@ -563,29 +562,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ===== PARALLAX EFFECT ON HERO =====
-window.addEventListener('scroll', () => {
-  const hero = document.querySelector('.hero-content');
-  if (!hero) return;
-  const scrolled = window.scrollY;
-  if (scrolled < window.innerHeight) {
-    hero.style.transform = `translateY(${scrolled * 0.3}px)`;
-    hero.style.opacity = 1 - scrolled / window.innerHeight;
-  }
-});
+// Disabled: handled by GSAP ScrollTrigger in /js/cinema.js.
 
 // ===== MAGNETIC BUTTON EFFECT =====
-document.querySelectorAll('.btn-primary').forEach(btn => {
-  btn.addEventListener('mousemove', (e) => {
-    const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    btn.style.transform = `translateY(-2px) translate(${x * 0.1}px, ${y * 0.1}px)`;
-  });
-
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform = '';
-  });
-});
+// Disabled: handled by GSAP magnetic in /js/cinema.js.
 
 // ===== TILT EFFECT ON SERVICE CARDS =====
 document.querySelectorAll('.service-mini-card, .team-card').forEach(card => {
@@ -593,10 +573,23 @@ document.querySelectorAll('.service-mini-card, .team-card').forEach(card => {
     const rect = card.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `translateY(-4px) perspective(1000px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg)`;
+    card.style.setProperty('--mx', ((x + 0.5) * 100) + '%');
+    card.style.setProperty('--my', ((y + 0.5) * 100) + '%');
+    card.style.transform = `translateY(-4px) perspective(1000px) rotateX(${-y * 6}deg) rotateY(${x * 6}deg)`;
   });
 
   card.addEventListener('mouseleave', () => {
     card.style.transform = '';
+  });
+});
+
+// Track mouse for portfolio/media spotlight effect (CSS uses --mx/--my)
+document.querySelectorAll('.portfolio-item, .media-item').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    card.style.setProperty('--mx', x + '%');
+    card.style.setProperty('--my', y + '%');
   });
 });
